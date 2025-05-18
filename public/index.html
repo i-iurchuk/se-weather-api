@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Weather Subscription</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <img src="./img/weather.png" alt="weather image" />
+
+    <h1>Subscribe to Weather Forecast</h1>
+
+    <form id="subscription-form">
+      <input name="email" type="email" placeholder="Email" required />
+      <input name="city" type="text" placeholder="City" required />
+      <select name="frequency">
+        <option value="hourly">Hourly</option>
+        <option value="daily" selected>Daily</option>
+      </select>
+      <button type="submit">Subscribe</button>
+    </form>
+
+    <pre id="message"></pre>
+
+    <script>
+      document.getElementById('subscription-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(form),
+        });
+        const data = await res.json();
+        document.getElementById('message').textContent = data.message || data.error;
+      });
+    </script>
+  </body>
+</html>

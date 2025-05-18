@@ -1,0 +1,26 @@
+body {
+  font-family: sans-serif;
+  max-width: 300px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+input,
+select,
+button {
+  padding: 8px;
+  margin: 15px 10px;
+}
+
+h1 {
+  font-size: 1.2em;
+}
+
+img {
+  width: 150px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}

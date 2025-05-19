@@ -12,14 +12,11 @@ async function notify(frequency) {
   const subscriptions = await knex('subscriptions').where({ frequency, confirmed: true });
 
   for (const s of subscriptions) {
-    // TODO! from WeatherCOntroller
     const weather = await getWeatherByCity(s.city);
     await sendUpdateEmail(s.email, s.city, weather, s.token);
   }
 }
 
-// TODO ???
-// TODO =>> weather controller => getWeather !!
 async function getWeatherByCity(city) {
   const { data } = await axios.get(process.env.WEATHER_API_URL, {
     params: { key: WEATHER_KEY, q: city },

@@ -20,25 +20,29 @@ export async function subscribe(req, res) {
     return res.status(400).json({ error: 'Invalid frequency' });
   }
 
-  const existing = await knex('subscriptions').where({ email, city }).first();
+  try {
+    const existing = await knex('subscriptions').where({ email, city }).first();
 
-  if (existing) {
-    return res.status(409).json({ error: 'Email already subscribed' });
+    if (existing) {
+      return res.status(409).json({ error: 'Email already subscribed' });
+    }
+
+    const id = uuid();
+    const token = jwt.sign({ id, email }, secret, { expiresIn: '7d' });
+
+    await knex('subscriptions').insert({
+      id,
+      email,
+      city,
+      frequency,
+      token,
+    });
+
+    await sendConfirmationEmail(email, token);
+    res.status(200).json({ message: '	Subscription successful. Confirmation email sent.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal error' });
   }
-
-  const id = uuid();
-  const token = jwt.sign({ id, email }, secret, { expiresIn: '7d' });
-
-  await knex('subscriptions').insert({
-    id,
-    email,
-    city,
-    frequency,
-    token,
-  });
-
-  await sendConfirmationEmail(email, token);
-  res.status(200).json({ message: '	Subscription successful. Confirmation email sent.' });
 }
 
 export async function confirm(req, res) {

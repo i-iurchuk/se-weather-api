@@ -22,7 +22,6 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - WEATHER_API_KEY=${WEATHER_API_KEY}
       - BASE_URL=${BASE_URL}
-      - SMTP_URL=${SMTP_URL}
     volumes:
       - .:/usr/src/app
     command: sh -c "npm run migrate && npm start"
